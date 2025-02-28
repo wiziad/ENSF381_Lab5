@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab5 - Exercise 3</title>
+</head>
+<body>
+    <input type="text" id="textInput" placeholder="Enter a user number (1-30)"/>
+    <label id="textLabel"></label>
+    <button id="redButton">Red</button>
+    <button id="blueButton">Blue</button>
+    <button id="greenButton">Green</button>
+    <button id="orangeButton">Orange</button>
+    <button id="purpleButton">Purple</button>
+
+    <script type="text/javascript">
+   
+        <!-- Your JavaScript code will go here -->
+
+            const textInput = document.getElementById('textInput');
+            const textLabel = document.getElementById('textLabel');
+            const redButton = document.getElementById('redButton');
+            const blueButton = document.getElementById('blueButton');
+            const greenButton = document.getElementById('greenButton');
+            const orangeButton = document.getElementById('orangeButton');
+            const purpleButton = document.getElementById('purpleButton');
+
+            // Async function for API
+            async function retrieveData() {
+                try {
+                    const response = await fetch('https://67c1fd9b61d8935867e502ad.mockapi.io/users_api');
+                    const users = await response.json();
+                    return users;
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    return null;
+                }
+            }
+
+            // Update keypress
+            textInput.addEventListener('keypress', async function(event) {
+                if (event.key === 'Enter') {
+                    const userId = textInput.value.trim();
+                    textInput.value = ''; 
+                    
+                    if (!userId || isNaN(userId)) {
+                        textLabel.textContent = "Please enter a valid User ID.";
+                        return;
+                    }
+
+                    const users = await retrieveData();
+                    if (!users) {
+                        textLabel.textContent = "Error fetching user data.";
+                        return;
+                    }
+
+                    let found = false;
+                    for (const user of users) {
+                        if (user.id === userId) {
+                            textLabel.textContent = `ID: ${user.id}, Name: ${user.first_name}, Group: ${user.user_group}`;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        textLabel.textContent = "No users were found with the provided User_ID.";
+                    }
+                }
+            });
+
+            redButton.addEventListener('click', function() {
+                textLabel.style.color = 'red';
+            });
+
+            blueButton.addEventListener('click', function() {
+                textLabel.style.color = 'blue';
+            });
+
+            greenButton.addEventListener('click', function() {
+                textLabel.style.color = 'green';
+            });
+
+            orangeButton.addEventListener('click', function() {
+                textLabel.style.color = 'orange';
+            });
+
+            purpleButton.addEventListener('click', function() {
+                textLabel.style.color = 'purple';
+            });
+    </script>
+</body>
+</html>
